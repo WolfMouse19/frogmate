@@ -22,6 +22,76 @@ const appData = {
     currentContact: null
 };
 
+// Local Storage Functions
+function saveToLocalStorage() {
+    try {
+        // Save settings without the logo (handle separately)
+        const settingsForStorage = {...appData.settings};
+        const logoData = settingsForStorage.defaultLogo;
+        delete settingsForStorage.defaultLogo;
+        
+        localStorage.setItem('invoiceAppSettings', JSON.stringify(settingsForStorage));
+        localStorage.setItem('invoiceAppInvoices', JSON.stringify(appData.invoices));
+        localStorage.setItem('invoiceAppContacts', JSON.stringify(appData.contacts));
+        
+        // Store logo separately if it exists (it can be large)
+        if (logoData) {
+            localStorage.setItem('invoiceAppLogo', logoData);
+        }
+        
+        console.log('Data saved to local storage');
+    } catch (error) {
+        console.error('Error saving to local storage:', error);
+        // If localStorage is full, try without the logo
+        try {
+            const settingsForStorage = {...appData.settings};
+            delete settingsForStorage.defaultLogo;
+            
+            localStorage.setItem('invoiceAppSettings', JSON.stringify(settingsForStorage));
+            localStorage.setItem('invoiceAppInvoices', JSON.stringify(appData.invoices));
+            localStorage.setItem('invoiceAppContacts', JSON.stringify(appData.contacts));
+            
+            console.log('Data saved to local storage (without logo)');
+            alert('Warning: Your logo was not saved due to storage limitations.');
+        } catch (fallbackError) {
+            console.error('Error in fallback save:', fallbackError);
+            alert('Unable to save your data. Local storage might be full.');
+        }
+    }
+}
+
+function loadFromLocalStorage() {
+    try {
+        // Load settings
+        const storedSettings = localStorage.getItem('invoiceAppSettings');
+        if (storedSettings) {
+            Object.assign(appData.settings, JSON.parse(storedSettings));
+        }
+        
+        // Load logo separately
+        const storedLogo = localStorage.getItem('invoiceAppLogo');
+        if (storedLogo) {
+            appData.settings.defaultLogo = storedLogo;
+        }
+        
+        // Load invoices
+        const storedInvoices = localStorage.getItem('invoiceAppInvoices');
+        if (storedInvoices) {
+            appData.invoices = JSON.parse(storedInvoices);
+        }
+        
+        // Load contacts
+        const storedContacts = localStorage.getItem('invoiceAppContacts');
+        if (storedContacts) {
+            appData.contacts = JSON.parse(storedContacts);
+        }
+        
+        console.log('Data loaded from local storage');
+    } catch (error) {
+        console.error('Error loading from local storage:', error);
+    }
+}
+
 // Dark mode detection
 if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     document.documentElement.classList.add('dark');
@@ -460,6 +530,9 @@ function filterInvoicesByTaxYear(taxYear) {
 
 // Initialize application
 function initApp() {
+    // Load data from localStorage
+    loadFromLocalStorage();
+    
     // Set today's date as default
     const today = new Date();
     const formattedDate = formatDateForInput(today);
@@ -544,6 +617,9 @@ function initApp() {
         appData.settings.taxYearEndMonth = parseInt(taxYearEndMonth.value);
         appData.settings.taxYearEndDay = parseInt(taxYearEndDay.value);
         
+        // Save to local storage
+        saveToLocalStorage();
+        
         // Regenerate tax years
         renderTaxYearFolders();
         
@@ -571,6 +647,9 @@ function initApp() {
             appData.settings.taxYearStartDay = 6; // 6th
             appData.settings.taxYearEndMonth = 4; // April
             appData.settings.taxYearEndDay = 5; // 5th
+            
+            // Save changes to local storage
+            saveToLocalStorage();
             
             // Update UI
             taxYearStartMonth.value = 4;
@@ -731,6 +810,7 @@ elements.defaultLogoUpload.addEventListener('change', function(e) {
         const reader = new FileReader();
         reader.onload = function(e) {
             appData.settings.defaultLogo = e.target.result;
+            saveToLocalStorage();
         };
         reader.readAsDataURL(e.target.files[0]);
     }
@@ -1205,6 +1285,9 @@ function saveCurrentInvoice() {
         }
     }
     
+    // Save to local storage
+    saveToLocalStorage();
+    
     // Reset current invoice
     appData.currentInvoice = null;
     
@@ -1405,6 +1488,9 @@ function renderInvoiceHistory() {
                 // Update paid status
                 appData.invoices[invoiceIndex].paid = this.checked;
                 
+                // Save to local storage
+                saveToLocalStorage();
+                
                 // Apply or remove paid class to the row
                 const row = this.closest('tr');
                 if (this.checked) {
@@ -1464,6 +1550,9 @@ function importInvoices(file) {
             if (importedData.contacts && Array.isArray(importedData.contacts)) {
                 appData.contacts = importedData.contacts;
             }
+            
+            // Save to local storage
+            saveToLocalStorage();
             
             // Update UI
             renderInvoiceHistory();
@@ -1635,6 +1724,9 @@ function saveContact() {
         appData.contacts.push(contactData);
     }
     
+    // Save to local storage
+    saveToLocalStorage();
+    
     // Reset current contact
     appData.currentContact = null;
     
@@ -1743,6 +1835,9 @@ function saveSettings() {
     appData.settings.fromEmail = elements.defaultFromEmail.value;
     appData.settings.fromPhone = elements.defaultFromPhone.value;
     
+    // Save to local storage
+    saveToLocalStorage();
+    
     // Update current form with new settings
     elements.invoicePrefix.value = appData.settings.invoicePrefix;
     elements.vatRate.value = appData.settings.vatRate;
@@ -1812,6 +1907,9 @@ function deleteItem(type, id) {
         renderContacts();
         renderClientSelectionList();
     }
+    
+    // Save changes to local storage
+    saveToLocalStorage();
 }
 
 function closeDeleteConfirmModal() {
@@ -1975,6 +2073,9 @@ function renderFilteredInvoices(invoices) {
             if (invoiceIndex !== -1) {
                 // Update paid status
                 appData.invoices[invoiceIndex].paid = this.checked;
+                
+                // Save to local storage
+                saveToLocalStorage();
                 
                 // Apply or remove paid class to the row
                 const row = this.closest('tr');
