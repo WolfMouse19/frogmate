@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.invoice-item-hover {
+    position: relative;
+}
+
+.invoice-item-hover:hover::after {
+    content: attr(data-original);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 10;
+    white-space: nowrap;
+}
+
+.dark .invoice-item-hover:hover::after {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+}
+
+input[type="file"] {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.print-only {
+    display: none;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    .print-only {
+        display: block;
+    }
+    
+    body {
+        background: white;
+    }
+}
+
+/* Invoice preview styles */
+.invoice-preview {
+    font-size: 12px;
+}
+
+.invoice-preview h1 {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.invoice-preview h2 {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.dark .invoice-preview {
+    color: #000;
+    background-color: #fff;
+}
+
+/* Paid invoice styling */
+tr.paid-invoice {
+    background-color: rgba(0, 200, 83, 0.1);
+}
+
+.dark tr.paid-invoice {
+    background-color: rgba(0, 200, 83, 0.2);
+}
