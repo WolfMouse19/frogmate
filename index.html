@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/x-icon" href="/images/creofrog.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bilingual Invoice Generator</title>
+    <title><Bilingual Invoice Tool></title>
+        <div class="flex items-center justify-center mb-8">
+            <img src="images/creofrog.png" alt="App Logo" class="h-40 w-auto mr-4">
+            
+        </div>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -23,7 +28,7 @@
 </head>
 <body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200">
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-center text-primary dark:text-primary mb-8">Bilingual Invoice Generator</h1>
+        <h1 class="text-3xl font-bold text-left text-primary dark:text-primary mb-8">Bilingual Invoice Tool</h1>
         
         <!-- Main Tabs -->
         <div class="mb-6">
@@ -80,7 +85,7 @@
                                 </div>
                                 
                                 <div class="w-full md:w-1/2">
-                                    <label class="block text-sm font-medium mb-1">Language</label>
+                                    <label class="block text-sm font-medium mb-1">Input Language</label>
                                     <select id="primaryLanguage" class="w-full text-base rounded-lg border-gray-300 dark:bg-gray-700 dark:border-gray-600">
                                         <option value="en">English</option>
                                         <option value="pl">Polish</option>
