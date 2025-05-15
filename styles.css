@@ -39,20 +39,47 @@ input[type="file"] {
     display: none;
 }
 
+/* Print styles */
 @media print {
-    .no-print {
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+    
+    /* Make only the invoice preview visible */
+    #invoicePreview, #invoicePreview * {
+        visibility: visible !important;
+    }
+    
+    /* Position the invoice preview */
+    #invoicePreview {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        background-color: white !important;
+    }
+    
+    /* Hide any navigation, buttons, and other UI elements */
+    .container > :not(#tabContent),
+    #tabContent > :not(.tab-panel.block),
+    .tab-panel.block > .grid > :not(#invoicePreview) {
         display: none !important;
     }
     
-    .print-only {
-        display: block;
-    }
-    
-    body {
-        background: white;
+    /* Remove rounded corners and shadows for print */
+    .rounded-lg, .shadow-md {
+        border-radius: 0 !important;
+        box-shadow: none !important;
     }
 }
-
 /* Invoice preview styles */
 .invoice-preview {
     font-size: 12px;
@@ -80,4 +107,36 @@ tr.paid-invoice {
 
 .dark tr.paid-invoice {
     background-color: rgba(0, 200, 83, 0.2);
+}
+/* Input field styling improvements */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+select,
+textarea {
+    background-color: #f9f9f9 !important; /* Light gray background in light mode */
+}
+
+/* Maintain dark mode colors */
+.dark input[type="text"],
+.dark input[type="number"],
+.dark input[type="email"],
+.dark input[type="tel"],
+.dark input[type="date"],
+.dark select,
+.dark textarea {
+    background-color: #374151 !important; /* Maintain dark background in dark mode */
+}
+
+/* Add subtle hover effect for better UX */
+input:hover, select:hover, textarea:hover {
+    border-color: #aaa !important;
+}
+
+/* Keep focused state */
+input:focus, select:focus, textarea:focus {
+    border-color: #5D5CDE !important;
+    box-shadow: 0 0 0 3px rgba(93, 92, 222, 0.1) !important;
 }
